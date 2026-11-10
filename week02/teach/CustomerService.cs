@@ -11,24 +11,96 @@ public class CustomerService {
         // Test Cases
 
         // Test 1
-        // Scenario: 
-        // Expected Result: 
+        // Scenario: Queue with size 0
+        // Expected Result: Queue size should default to 10
         Console.WriteLine("Test 1");
-
-        // Defect(s) Found: 
+        var cs1 = new CustomerService(0);
+        Console.WriteLine(cs1);
+        // Defect(s) Found: None
 
         Console.WriteLine("=================");
 
         // Test 2
-        // Scenario: 
-        // Expected Result: 
+        // Scenario: Queue with a negative size 
+        // Expected Result: Queue size should be default to 10
         Console.WriteLine("Test 2");
+        var cs2 = new CustomerService(-8);
+        Console.WriteLine(cs2);
 
-        // Defect(s) Found: 
+        // Defect(s) Found: None
 
         Console.WriteLine("=================");
 
-        // Add more Test Cases As Needed Below
+        // Test 3
+        // Scenario: Add customer to an empty queue
+        // Expected Result: Customer should be added to the queue.
+        Console.WriteLine("Test 3");
+        var cs3 = new CustomerService(5);
+        cs3.AddNewCustomer();
+        Console.WriteLine(cs3);
+
+        // Defect(s) Found: None
+
+        Console.WriteLine("=================");
+
+        // Test 4
+        // Scenario: Queue size is 2 
+        // Expected Result: Show an error message when the 3rd customer is added.
+        Console.WriteLine("Test 4");
+        var cs4 = new CustomerService(2);
+        cs4.AddNewCustomer();
+        cs4.AddNewCustomer();
+        cs4.AddNewCustomer();
+        Console.WriteLine(cs4);
+
+        // Defect(s) Found: AddNewCustomer() used _queue.Count > _maxSize instead of _queue.Count >= _maxSize
+
+        Console.WriteLine("=================");
+
+        // Test 5
+        // Scenario: Queue Contain Joshua and Michael /Serve One Customer 
+        // Expected Result: 
+        // Joshua should be displayed 
+        // Joshua should be removed 
+        //Michael should become first in queue.
+        Console.WriteLine("Test 5");
+        var cs5 = new CustomerService(5);
+        cs5.AddNewCustomer();
+        cs5.AddNewCustomer();
+        cs5.ServeCustomer();
+
+        // Defect(s) Found: Customer was removed before being displayed.
+
+        Console.WriteLine("=================");
+        // Test 6
+        // Scenario: Add three customers and serve them at a time 
+        // Expected Result: Customers should be served in order
+        Console.WriteLine("Test 6");
+        var cs6 = new CustomerService(5);
+        cs6.AddNewCustomer();
+        cs6.AddNewCustomer();
+        cs6.AddNewCustomer();
+
+        cs6.ServeCustomer();
+        cs6.ServeCustomer();
+        cs6.ServeCustomer();
+
+        // Defect(s) Found: None
+
+        Console.WriteLine("=================");
+
+        // Test 7
+        // Scenario: Attempt to serve from an empty queue
+        // Expected Result: Error message displayed: No customer in queue.
+        Console.WriteLine("Test 7");
+        var cs7 = new CustomerService(5);
+        
+        cs7.ServeCustomer();
+
+        // Defect(s) Found: Missing empty queue check.
+
+        Console.WriteLine("=================");
+
     }
 
     private readonly List<Customer> _queue = new();
@@ -67,7 +139,7 @@ public class CustomerService {
     /// </summary>
     private void AddNewCustomer() {
         // Verify there is room in the service queue
-        if (_queue.Count > _maxSize) {
+        if (_queue.Count >= _maxSize) {
             Console.WriteLine("Maximum Number of Customers in Queue.");
             return;
         }
@@ -88,9 +160,14 @@ public class CustomerService {
     /// Dequeue the next customer and display the information.
     /// </summary>
     private void ServeCustomer() {
-        _queue.RemoveAt(0);
+        if (_queue.Count == 0)
+        {
+            Console.WriteLine("No Customer in queue.");
+            return;
+        }
         var customer = _queue[0];
         Console.WriteLine(customer);
+        _queue.RemoveAt(0);
     }
 
     /// <summary>
